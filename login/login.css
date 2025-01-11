@@ -13,6 +13,7 @@ body {
     align-items: center;
     padding: 20px;
 }
+
 .suc{
     scale:0.5;
     position: fixed;
@@ -24,7 +25,7 @@ body {
     scale:0.7;
     position: fixed;
     top:0%;
-    left: 60%;
+    left: 65%;
 }
 .read{
     scale:0.6;
@@ -36,7 +37,7 @@ body {
     scale:0.6;
     position: fixed;
     top:40%;
-    left: 60%;
+    left: 65%;
 }
 
 .container {
@@ -47,6 +48,7 @@ body {
     width: 100%;
     max-width: 400px;
     position: relative;
+    scale: 1.3;
 }
 
 .forms-container {

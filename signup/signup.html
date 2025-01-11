@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./signup.css">
+</head>
+<body>
+    <img class="suc" src="../success.png" alt="">
+    <img class="pow" src="../power.png" alt="">
+    <img class="read" src="../read.png" alt=" ">
+    <img class="reading" src="../reading.png" alt=" ">
+    <div class="container">
+        <form action="#" class="sign-up-form">
+            <h2 class="title">Create Account</h2>
+            <div class="input-field">
+                <input type="text" id="signupName" placeholder="Username" required>
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="error-message" id="signupNameError"></div>
+            
+            <div class="input-field">
+                <input type="email" id="signupEmail" placeholder="Email" required>
+                <i class="fas fa-envelope"></i>
+            </div>
+            <div class="error-message" id="signupEmailError"></div>
+            
+            <div class="input-field">
+                <input type="text" id="signupPhone" placeholder="Phone" required>
+                <i class="fas fa-phone"></i>
+            </div>
+            <div class="error-message" id="signupPhoneError"></div>
+            
+            <div class="input-field">
+                <input type="password" id="signupPassword" placeholder="Password" required>
+                <i class="fas fa-lock"></i>
+            </div>
+            <div class="error-message" id="signupPasswordError"></div>
+            
+            
+            <button type="submit" class="btn">Sign up</button>
+            <p class="social-text">Or Sign up with social platforms</p>
+            <div class="social-media">
+                <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-google"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+            </div>
+            <div class="toggle-container">
+                <p>Already have an account? 
+                    <a href="../login/login.html" class="toggle-btn">Sign in</a>
+                </p>
+            </div>
+        </form>
+    </div>
+    <script src="signup.js"></script>
+</body>
+</html>
