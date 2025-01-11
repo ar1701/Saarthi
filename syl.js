@@ -4,6 +4,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const subjectInput = document.getElementById('subject');
     const generateButton = document.getElementById('generateButton');
 
+    generateButton.addEventListener('click',(e) =>{
+        e.preventDefault();
+    } );
+
     // Listen for changes in the "Class" dropdown
     classSelect.addEventListener('change', () => {
         if (classSelect.value) {
