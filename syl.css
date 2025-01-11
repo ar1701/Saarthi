@@ -1,0 +1,234 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.login-btn {
+    margin-left: 1rem;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    background-color: #E3D8F1;
+    color: #9A328A;
+    text-decoration: none;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #30304A;
+    color: #E3D8F1;
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+/* Navbar Styles */
+.navbar-collapse {
+    background: linear-gradient(135deg, #9A328A, #0088A3);
+    padding: 1rem 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-nav {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0 2rem;
+}
+
+.nav-link {
+    color: #E3D8F1;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    transition: all 0.3s ease;
+    border-radius: 4px;
+}
+
+.nav-link:hover {
+    background-color: rgba(227, 216, 241, 0.1);
+    color: #E3D8F1;
+}
+
+.nav-link.active {
+    background-color: #0088A3;
+    color: #E3D8F1;
+}
+
+/* Dropdown Styles */
+.dropdown {
+    position: relative;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #30304A;
+    border: 1px solid #9A328A;
+    border-radius: 4px;
+    padding: 0.5rem 0;
+    display: none;
+    min-width: 160px;
+}
+
+.dropdown-menu.show {
+    display: block;
+}
+
+.dropdown-item {
+    color: #E3D8F1;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    display: block;
+    transition: background-color 0.3s ease;
+}
+
+.dropdown-item:hover {
+    background-color: #9A328A;
+    color: #E3D8F1;
+}
+
+/* Container Styles */
+.container {
+    max-width: 800px;
+    background: linear-gradient(145deg, #30304A, #9A328A);
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+}
+
+h1 {
+    text-align: center;
+    color: #E3D8F1;
+    margin-bottom: 2rem;
+    font-size: 2.5rem;
+}
+
+/* Form Styles */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+label {
+    font-size: 1.1rem;
+    color: #E3D8F1;
+}
+
+select, input {
+    padding: 0.8rem;
+    border: 2px solid #9A328A;
+    border-radius: 4px;
+    background-color: #30304A;
+    color: #E3D8F1;
+    font-size: 1rem;
+    width: 100%;
+    transition: border-color 0.3s ease;
+}
+
+select:focus, input:focus {
+    outline: none;
+    border-color: #0088A3;
+}
+
+select option {
+    background-color: #30304A;
+    color: #E3D8F1;
+}
+
+button {
+    padding: 1rem 2rem;
+    background: linear-gradient(90deg, #9A328A, #0088A3);
+    color: #E3D8F1;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: transform 0.3s ease;
+    margin-top: 1rem;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    background: linear-gradient(90deg, #0088A3, #9A328A);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .navbar-nav {
+        flex-direction: column;
+        padding: 1rem;
+    }
+
+    .dropdown-menu {
+        position: static;
+        width: 100%;
+    }
+
+}
+
+/* Animation for dropdown */
+.fade-down {
+    animation: fadeDown 0.3s ease-in-out;
+}
+
+@keyframes fadeDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#subjectContainer {
+    transition: all 2s ease;
+}
+
+#subjectContainer.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+button:disabled {
+    background-color: #9A328A;
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+.complete-container{
+    padding: 30px;
+    display: flex;
+    justify-content: space-around;
+    height: 600px;
+}
+/* Result Section */
+.result {
+    height: inherit;
+    margin-top: 2rem;
+    padding-top: 2rem;
+}
+
+h2 {
+    color: #E3D8F1;
+    margin-bottom: 1rem;
+}
+
+.syllabus {
+    width: 100%;
+    min-height: 200px;
+    padding: 1rem;
+    background-color: #30304A;
+    border: 2px solid #9A328A;
+    border-radius: 4px;
+    color: #E3D8F1;
+    font-family: inherit;
+    resize: vertical;
+}
+textarea{
+    border: none;
+}
