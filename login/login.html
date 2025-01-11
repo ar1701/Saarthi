@@ -13,7 +13,33 @@
     <img class="read" src="../read.png" alt=" ">
     <img class="reading" src="../reading.png" alt=" ">
     <div class="container">
+        <form action="#" class="sign-in-form">
+            <h2 class="title">Welcome Back!</h2>
+            <div class="input-field">
+                <input type="email" id="loginEmail" placeholder="Username" required>
+                <i class="fas fa-envelope"></i>
             </div>
+            <div class="error-message" id="loginEmailError">Please enter a valid email address</div>
+            
+            <div class="input-field">
+                <input type="password" id="loginPassword" placeholder="Password" required>
+                <i class="fas fa-lock"></i>
+            </div>
+            <div class="error-message" id="loginPasswordError">Password must be at least 6 characters</div>
+            
+            <button type="submit" class="btn">Login</button>
+            <p class="social-text">Or Sign in with social platforms</p>
+            <div class="social-media">
+                <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-google"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+            </div>
+            <div class="toggle-container">
+                <p>Don't have an account? 
+                    <a href="../signup/signup.html" class="toggle-btn">Sign up</a>
+                </p>
+            </div>
+        </form>
     </div>
     <script src="login.js"></script>
 </body>
