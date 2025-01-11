@@ -16,13 +16,31 @@
     text-decoration: none;
     margin: 10px;
 }
+.suc{
+    position: fixed;
+    left: 60%;
+    scale:0.7;
 
+}
+.pow{
+    position: fixed;
+    top: -35px;
+    left: 30%;
+    scale:0.4;
+}
+.read{
+    position: fixed;
+    bottom:-2em;  
+    left: 60%;
+    scale:0.6;
+}
 body {
     font-family: Arial, sans-serif;
     background-color: #30304A;
     color: #E3D8F1;
     line-height: 1.6;
     min-height: 100vh;
+    
 }
 
 /* Navbar Styles */
@@ -66,6 +84,7 @@ body {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     padding: 30px;
     height: max-content;
+    scale:1.2;
 }
 
 h1 {
@@ -170,17 +189,19 @@ button:disabled {
     cursor: not-allowed;
 }
 .complete-container{
+    height: 700px;
     padding: 30px;
+    /* padding-top: 200px; */
     display: flex;
     justify-content: space-around;
-    height: 600px;
+    /* border: solid red 10px; */
+    align-items: center;
 }
 /* Result Section */
 .result {
-    height: inherit;
-    margin-top: 2rem;
-    padding-top: 2rem;
+    position: relative; 
     width: 50%;
+    scale: 1.2;
 }
 
 h2 {
@@ -201,7 +222,25 @@ h2 {
 }
 textarea{
     border: none;
+    max-height: 70vh;
 }
 .grade{
     font-size: 15px;
 }
+footer{
+    border-top:#9A328A solid 5px ;
+    display: flex;
+    justify-content: space-around;
+    padding: 20px;
+    align-items: center;
+}
+
+footer a{
+    text-decoration: none;
+    color: #E3D8F1;
+    transition: color 0.3s;
+}
+
+footer a:hover {
+    color: #0088A3;
+}   
