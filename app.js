@@ -87,8 +87,7 @@ app.use((req, res, next) => {
 async function connectDB() {
   try {
     await mongoose.connect(dbUrl, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
+    
     });
     console.log("Database connection successful");
   } catch (error) {
@@ -342,30 +341,30 @@ app.post("/upload", upload.single("file"), (req, res) => {
   res.json({ message: "File uploaded successfully", fileUrl });
 });
 
-// Form submission route
-app.post('/form', isLoggedIn, upload.single('image'), async (req, res) => {
-  try {
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
-    const prompt = '';
-    const imageParts = [{
-      inlineData: {
-        data: fs.readFileSync(req.file.path).toString('base64'),
-        mimeType: 'image/jpeg'
-      }
-    }];
+  // Form submission route
+  app.post('/form', isLoggedIn, upload.single('image'), async (req, res) => {
+    try {
+      const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+      const prompt = '';
+      const imageParts = [{
+        inlineData: {
+          data: fs.readFileSync(req.file.path).toString('base64'),
+          mimeType: 'image/jpeg'
+        }
+      }];
 
-    console.log(req.file.path);
+      console.log(req.file.path);
 
-    const result = await model.generateContent([prompt, ...imageParts]);
-    const response = await result.response;
-    const text = response.text();
+      const result = await model.generateContent([prompt, ...imageParts]);
+      const response = await result.response;
+      const text = response.text();
 
-    res.json({ result: text }); // Sends JSON response
-  } catch (error) {
-    console.error('Error:', error);
-    res.status(500).json({ error: 'Internal server error' }); // Error response
-  }
-});
+      res.json({ result: text }); // Sends JSON response
+    } catch (error) {
+      console.error('Error:', error);
+      res.status(500).json({ error: 'Internal server error' }); // Error response
+    }
+  });      
 
 // Logout route
 app.get("/logout", (req, res, next) => {
