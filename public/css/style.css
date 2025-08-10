@@ -1,8 +1,8 @@
 /********** Template CSS **********/
 :root {
-    --primary: #9A328A;
-    --light: #E3D8F1;
-    --dark: #30304A;
+    --primary: #06BBCC;
+    --light: #F0FBFC;
+    --dark: #181d38;
 }
 
 .fw-medium {
@@ -21,6 +21,7 @@
     z-index: 99;
 }
 
+
 /*** Spinner ***/
 #spinner {
     opacity: 0;
@@ -38,14 +39,9 @@
 
 /*** Button ***/
 .btn {
-    background-color: var(--primary);
-    border-color: var(--primary);
-    color: #FFFFFF;
-}
-
-.btn:hover {
-    background-color: #6A1F5F; /* Darker purple from landing page */
-    border-color: #6A1F5F;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 600;
+    transition: .5s;
 }
 
 .btn.btn-primary,
@@ -88,39 +84,15 @@
     font-weight: 900;
     vertical-align: middle;
     margin-left: 8px;
-    align-self: center;
-}
-
-#cat {
-    scale: 0.9;  
-    height: 200px;
-}
-
-#cat:hover {
-    scale: 0.9;  
-}
-
-div.owl-carousel-item.position-relative>img {
-    filter: sepia(100%) saturate(300%) hue-rotate(280deg) brightness(100%) !important;
-}
-div>img.img-fluid.position-absolute.w-100.h-100 {
-    filter: sepia(100%) saturate(300%) hue-rotate(280deg) brightness(70%) !important;
-}
-a>img.img-fluid {
-    filter: sepia(100%) saturate(300%) hue-rotate(280deg) brightness(110%) !important;
-}
-a>img.img-fluid.w-100.h-100 {
-    filter: sepia(150%) saturate(400%) hue-rotate(280deg) brightness(80%) !important;
 }
 
 .navbar-light .navbar-nav .nav-link {
-    padding: 25px 15px;
-    color: #E3D8F1;
+    margin-right: 30px;
+    padding: 25px 0;
+    color: #FFFFFF;
     font-size: 15px;
     text-transform: uppercase;
     outline: none;
-    display: flexbox;
-    justify-content: center;
 }
 
 .navbar-light .navbar-nav .nav-link:hover,
@@ -142,11 +114,10 @@ a>img.img-fluid.w-100.h-100 {
 .navbar-light .navbar-brand,
 .navbar-light a.btn {
     height: 75px;
-    
 }
 
 .navbar-light .navbar-nav .nav-link {
-    color: var(--light);
+    color: var(--dark);
     font-weight: 500;
 }
 
@@ -162,7 +133,6 @@ a>img.img-fluid.w-100.h-100 {
         opacity: 0;
         visibility: hidden;
         transition: .5s;
-        width: 100%;
     }
 
     .navbar .dropdown-menu.fade-down {
@@ -172,7 +142,6 @@ a>img.img-fluid.w-100.h-100 {
     }
 
     .navbar .nav-item:hover .dropdown-menu {
-        width: 100%;
         top: 100%;
         transform: rotateX(0deg);
         visibility: visible;
@@ -228,15 +197,14 @@ a>img.img-fluid.w-100.h-100 {
 }
 
 .page-header {
-    background: url(../img/carousel-1.jpg);
-    filter: sepia(200%) saturate(250%) hue-rotate(280deg) brightness(60%) !important;
+    background: linear-gradient(rgba(24, 29, 56, .7), rgba(24, 29, 56, .7)), url(../img/carousel-1.jpg);
     background-position: center center;
     background-repeat: no-repeat;
     background-size: cover;
 }
 
 .page-header-inner {
-    background: rgba(48, 48, 74, .7);
+    background: rgba(15, 23, 43, .7);
 }
 
 .breadcrumb-item + .breadcrumb-item::before {
@@ -286,14 +254,12 @@ a>img.img-fluid.w-100.h-100 {
 
 /*** Service ***/
 .service-item {
-    background: rgba(154, 50, 138, 0.1);
-    height: 500px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    background: var(--light);
+    transition: .5s;
 }
 
 .service-item:hover {
+    margin-top: -10px;
     background: var(--primary);
 }
 
@@ -308,9 +274,8 @@ a>img.img-fluid.w-100.h-100 {
 
 /*** Categories & Courses ***/
 .category img,
-.course-item img,
-.owl-carousel-item img {
-    filter: sepia(20%) hue-rotate(280deg) saturate(200%);
+.course-item img {
+    transition: .5s;
 }
 
 .category a:hover img,
@@ -328,17 +293,6 @@ a>img.img-fluid.w-100.h-100 {
     transform: scale(1.1);
 }
 
-.btn.btn-primary,
-.nav-item:hover,
-.service-item:hover {
-    box-shadow: 0 0 15px rgba(154, 50, 138, 0.5);
-    transition: box-shadow 0.3s ease;
-}
-
-.testimonial-item img,
-.category img {
-    border: 3px solid var(--primary);
-}
 
 /*** Testimonial ***/
 .testimonial-carousel::before {
@@ -377,7 +331,6 @@ a>img.img-fluid.w-100.h-100 {
     }
 }
 
-
 .testimonial-carousel .owl-item .testimonial-text,
 .testimonial-carousel .owl-item.center .testimonial-text * {
     transition: .5s;
@@ -413,10 +366,6 @@ a>img.img-fluid.w-100.h-100 {
     border-color: var(--primary);
 }
 
-.footer .row.g-2 img {
-    background-color: var(--primary) !important;
-    padding: 5px !important;
-}
 
 /*** Footer ***/
 .footer .btn.btn-social {
@@ -431,30 +380,6 @@ a>img.img-fluid.w-100.h-100 {
     border: 1px solid #FFFFFF;
     border-radius: 35px;
     transition: .3s;
-}
-
-.navbar .btn,
-.footer .btn-social,
-.footer .btn-outline-light {
-    background-color: var(--primary);
-    border-color: var(--primary);
-    color: #FFFFFF;
-}
-
-.footer .btn-social:hover,
-.navbar .btn:hover {
-    background-color: #6A1F5F;
-    border-color: #6A1F5F;
-}
-
-/* Additional global color application */
-.text-primary {
-    color: var(--primary) !important;
-}
-
-/* Optional: Add purple tint to sections */
-.container-xxl {
-    background-color: rgba(154, 50, 138, 0.05);
 }
 
 .footer .btn.btn-social:hover {
@@ -508,6 +433,6 @@ a>img.img-fluid.w-100.h-100 {
     border-right: none;
 }
 
-.cat1 {
-    width: 750px;
+.cat1{
+    width: 750px ;
 }

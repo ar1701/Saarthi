@@ -1,46 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/css/login.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Page</title>
+  <link rel="stylesheet" href="/css/signup.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+
 </head>
-<body>
-    <img class="suc" src="/img/success.png" alt="">
-    <img class="pow" src="/img/power.png" alt="">
-    <img class="read" src="/img/read.png" alt=" ">
-    <img class="reading" src="/img/reading.png" alt=" ">
-    <div class="container">
-        <form action="/login" method="post" class="sign-in-form">
-            <h2 class="title">Welcome Back!</h2>
-            <div class="input-field">
-                <input type="text" id="loginEmail" placeholder="Username" name="username"required>
-                <i class="fas fa-envelope"></i>
+<body class="roboto-medium">
+  <div class="app">
+    <div id="login">
+      <div class="login-container">
+        <div class="left-section">
+          <h2>Log In</h2>
+          <form id="login-form" action="/login" method="post">
+            <div class="form-group">
+              
+            <div class="form-group">
+              <label>Username:</label>
+              <input id="email" type="text" name="username" required />
             </div>
-            <div class="error-message" id="loginEmailError">Please enter a valid email address</div>
-            
-            <div class="input-field">
-                <input type="password" id="loginPassword" placeholder="Password" name="password" required>
-                <i class="fas fa-lock"></i>
+           
+          
+            <div class="form-group">
+              <label>Password:</label>
+              <input id="phone" type="password" name="password" required />
             </div>
-            <div class="error-message" id="loginPasswordError">Password must be at least 6 characters</div>
-            
-            <button type="submit" class="btn">Login</button>
-            <p class="social-text">Or Sign in with social platforms</p>
-            <div class="social-media">
-                <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
-                <a href="#" class="social-icon"><i class="fab fa-google"></i></a>
-                <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
-            </div>
-            <div class="toggle-container">
-                <p>Don't have an account? 
-                    <a href="./signup" class="toggle-btn">Sign up</a>
-                </p>
-            </div>
-        </form>
+            <button type="submit">Log In</button>
+           
+          </form>
+           
+        </div>
+        <a href="/signup"><button type="submit">Sign Up</button>
+        </a>
+        <div class="right-section">
+          <h2>Welcome to Saarthi</h2>
+        </div>
+      </div>
     </div>
-    <!-- <script src="/js/login.js"></script> -->
+  </div>
 </body>
 </html>
