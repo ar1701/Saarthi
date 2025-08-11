@@ -1,7 +1,7 @@
 ## Deployment Link - https://saarthi-ymt7.onrender.com
 
 ### test-login
-#### username: raj
+#### username: ayushraj
 #### password: asdf
 
 # Unleash the Power of _Saarthi_ - One Platform for Schools and Students

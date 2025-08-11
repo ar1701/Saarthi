@@ -112,6 +112,7 @@ app.use((req, res, next) => {
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
   res.locals.currUser = req.user;
+  res.locals.currentPage = req.path.split("/")[1] || "home";
   next();
 });
 
@@ -122,47 +123,47 @@ app.listen(port, () => {
 
 // Routes
 app.get("/index", isLoggedIn, (req, res) => {
-  res.render("index.ejs");
+  res.render("index.ejs", { currentPage: "home" });
 });
 
 app.get("/about", isLoggedIn, (req, res) => {
-  res.render("about.ejs");
+  res.render("about.ejs", { currentPage: "about" });
 });
 
 app.get("/contact", isLoggedIn, (req, res) => {
-  res.render("contact.ejs");
+  res.render("contact.ejs", { currentPage: "contact" });
 });
 
 app.get("/team", isLoggedIn, (req, res) => {
-  res.render("team.ejs");
+  res.render("team.ejs", { currentPage: "team" });
 });
 
 app.get("/testimonial", isLoggedIn, (req, res) => {
-  res.render("testimonial.ejs");
+  res.render("testimonial.ejs", { currentPage: "testimonial" });
 });
 
 app.get("/courses", isLoggedIn, (req, res) => {
-  res.render("courses.ejs");
+  res.render("courses.ejs", { currentPage: "courses" });
 });
 
 app.get("/form", isLoggedIn, (req, res) => {
-  res.render("form.ejs");
+  res.render("form.ejs", { currentPage: "form" });
 });
 
 app.get("/search", isLoggedIn, (req, res) => {
-  res.render("search.ejs");
+  res.render("search.ejs", { currentPage: "search" });
 });
 
 app.get("/syllabus", isLoggedIn, (req, res) => {
-  res.render("syllabus.ejs");
+  res.render("syllabus.ejs", { currentPage: "syllabus" });
 });
 
 app.get("/ask", isLoggedIn, (req, res) => {
-  res.render("ask.ejs");
+  res.render("ask.ejs", { currentPage: "ask" });
 });
 
 app.get("/chat", isLoggedIn, (req, res) => {
-  res.render("chat.ejs");
+  res.render("chat.ejs", { currentPage: "chat" });
 });
 
 app.get("/main", (req, res) => {
@@ -172,14 +173,35 @@ app.get("/main", (req, res) => {
 app.get("/login", (req, res) => {
   res.render("login.ejs");
 });
+
+app.get("/signup", (req, res) => {
+  res.render("signup.ejs");
+});
+
 app.get("/grading", isLoggedIn, (req, res) => {
-  res.render("grading.ejs");
+  res.render("grading.ejs", { currentPage: "grading" });
+});
+
+app.get("/essay-writer", isLoggedIn, (req, res) => {
+  res.render("essay-writer.ejs", { currentPage: "essay-writer" });
+});
+
+app.get("/code-explainer", isLoggedIn, (req, res) => {
+  res.render("code-explainer.ejs", { currentPage: "code-explainer" });
+});
+
+app.get("/study-planner", isLoggedIn, (req, res) => {
+  res.render("study-planner.ejs", { currentPage: "study-planner" });
+});
+
+app.get("/flashcard-generator", isLoggedIn, (req, res) => {
+  res.render("flashcard-generator.ejs", { currentPage: "flashcard-generator" });
 });
 
 app.post(
   "/login",
   passport.authenticate("local", {
-    failureRedirect: "/login",
+    failureRedirect: "/login?error=Invalid username or password",
     failureFlash: true,
   }),
   async (req, res) => {
@@ -224,6 +246,138 @@ app.post("/syllabus", isLoggedIn, async (req, res) => {
     res.status(500).json({
       error:
         "I apologize, but I'm having trouble generating the syllabus right now. Please try again in a moment.",
+    });
+  }
+});
+
+// New AI-powered features
+app.post("/essay-writer", isLoggedIn, async (req, res) => {
+  try {
+    const { topic, type, length } = req.body;
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+    const prompt = `Write a ${type} essay on "${topic}" with approximately ${length} words.
+
+Guidelines:
+- Use clear, engaging language
+- Include an introduction, body paragraphs, and conclusion
+- Provide relevant examples and evidence
+- Use proper essay structure and formatting
+- Make it educational and informative
+- Use markdown formatting for better readability
+
+Please write a well-structured essay:`;
+
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const text = response.text();
+    res.json({ result: text });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({
+      error:
+        "I apologize, but I'm having trouble generating the essay right now. Please try again in a moment.",
+    });
+  }
+});
+
+app.post("/code-explainer", isLoggedIn, async (req, res) => {
+  try {
+    const { code, language } = req.body;
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+    const prompt = `Explain this ${language} code in detail:
+
+\`\`\`${language}
+${code}
+\`\`\`
+
+Please provide:
+1. A clear explanation of what the code does
+2. Line-by-line breakdown of important parts
+3. Key concepts and programming principles used
+4. Potential improvements or optimizations
+5. Common use cases for this type of code
+
+Use markdown formatting for better readability.`;
+
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const text = response.text();
+    res.json({ result: text });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({
+      error:
+        "I apologize, but I'm having trouble explaining the code right now. Please try again in a moment.",
+    });
+  }
+});
+
+app.post("/study-planner", isLoggedIn, async (req, res) => {
+  try {
+    const { subjects, hours, days, goals } = req.body;
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+    const prompt = `Create a personalized study plan for a student with the following requirements:
+
+Subjects: ${subjects}
+Available study hours per day: ${hours}
+Study days per week: ${days}
+Learning goals: ${goals}
+
+Please provide:
+1. A weekly study schedule
+2. Time allocation for each subject
+3. Study techniques and strategies
+4. Break and rest periods
+5. Progress tracking methods
+6. Tips for maintaining motivation
+
+Use markdown formatting and make it practical and achievable.`;
+
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const text = response.text();
+    res.json({ result: text });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({
+      error:
+        "I apologize, but I'm having trouble creating the study plan right now. Please try again in a moment.",
+    });
+  }
+});
+
+app.post("/flashcard-generator", isLoggedIn, async (req, res) => {
+  try {
+    const { topic, subject, count } = req.body;
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+    const prompt = `Generate ${count} flashcards for ${subject} on the topic: "${topic}"
+
+Format each flashcard as:
+**Question:** [Clear, concise question]
+**Answer:** [Detailed, educational answer]
+
+Guidelines:
+- Questions should test understanding, not just memorization
+- Answers should be comprehensive but concise
+- Include a mix of difficulty levels
+- Cover key concepts and important details
+- Make them engaging and educational
+
+Use markdown formatting for better readability.`;
+
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const text = response.text();
+    res.json({ result: text });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({
+      error:
+        "I apologize, but I'm having trouble generating flashcards right now. Please try again in a moment.",
     });
   }
 });
@@ -351,7 +505,7 @@ app.get("/logout", (req, res, next) => {
 });
 
 app.all("*", (req, res) => {
-  res.redirect("/index");
+  res.redirect("/main");
 });
 
 function fileToGenerativePart(path, mimeType) {
