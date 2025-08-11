@@ -115,7 +115,7 @@ app.use((req, res, next) => {
   next();
 });
 
-let port = 8080;
+let port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log("listening to the port " + port);
 });
@@ -218,10 +218,13 @@ app.post("/syllabus", isLoggedIn, async (req, res) => {
   try {
     let { std, subject } = req.body;
     let result = await syllabusGen(std, subject);
-    res.render("syl.ejs", { result });
+    res.json({ result: result });
   } catch (error) {
     console.error("Error:", error);
-    res.status(500).send("Internal Server Error");
+    res.status(500).json({
+      error:
+        "I apologize, but I'm having trouble generating the syllabus right now. Please try again in a moment.",
+    });
   }
 });
 
@@ -229,10 +232,13 @@ app.post("/ask", isLoggedIn, async (req, res) => {
   try {
     let { question } = req.body;
     let result = await textQuery(question);
-    res.render("ask2.ejs", { result });
+    res.json({ result: result });
   } catch (error) {
     console.error("Error:", error);
-    res.status(500).send("Internal Server Error");
+    res.status(500).json({
+      error:
+        "I apologize, but I'm having trouble processing your request right now. Please try again in a moment.",
+    });
   }
 });
 
@@ -240,14 +246,36 @@ app.post("/chat", isLoggedIn, async (req, res) => {
   try {
     const userInput = req.body.message;
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-    const result = await model.generateContent(userInput);
+
+    // Enhanced prompt for better structured responses
+    const enhancedPrompt = `You are an AI educational assistant for Saarthi, an innovative learning platform. 
+
+Please provide clear, structured, and educational responses to the user's question. Follow these guidelines:
+
+1. **Structure your response** with clear headings using markdown (## for main sections, ### for subsections)
+2. **Use bullet points** for lists and key concepts
+3. **Include examples** where helpful
+4. **Keep explanations** concise but comprehensive
+5. **Use bold text** for important terms and concepts
+6. **Format code** using \`code blocks\` when applicable
+7. **Be encouraging** and supportive in your tone
+8. **Adapt to the user's level** - assume they are a student seeking to learn
+
+User Question: ${userInput}
+
+Please provide a well-structured educational response:`;
+
+    const result = await model.generateContent(enhancedPrompt);
     const response = await result.response;
     const text = response.text();
 
-    res.json({ message: text }); // Response sent here
+    res.json({ message: text });
   } catch (error) {
     console.error("Error:", error);
-    res.status(500).json({ message: "Internal Server Error" }); // Fallback response
+    res.status(500).json({
+      message:
+        "I apologize, but I'm having trouble processing your request right now. Please try again in a moment.",
+    });
   }
 });
 
@@ -259,7 +287,28 @@ app.post("/form", isLoggedIn, upload.single("image"), async (req, res) => {
     }
 
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-    const prompt = "";
+
+    // Enhanced prompt for image analysis
+    const enhancedPrompt = `You are an AI educational assistant analyzing an image that contains a problem or question. 
+
+Please provide a comprehensive, well-structured solution following these guidelines:
+
+1. **Start with a clear overview** of what you see in the image
+2. **Break down the problem** into understandable steps
+3. **Provide the solution** with detailed explanations
+4. **Use markdown formatting** for better structure:
+   - Use ## for main sections
+   - Use ### for subsections
+   - Use bullet points for lists
+   - Use **bold** for important terms
+   - Use \`code\` for mathematical expressions or code
+5. **Include relevant concepts** and explanations
+6. **Be encouraging** and educational in your tone
+7. **If it's a math problem**, show step-by-step calculations
+8. **If it's a conceptual question**, provide clear explanations with examples
+
+Please analyze the image and provide a structured educational response:`;
+
     const imageParts = [
       {
         inlineData: {
@@ -269,21 +318,24 @@ app.post("/form", isLoggedIn, upload.single("image"), async (req, res) => {
       },
     ];
 
-    const result = await model.generateContent([prompt, ...imageParts]);
+    const result = await model.generateContent([enhancedPrompt, ...imageParts]);
     const response = await result.response;
     const text = response.text();
 
     // Clean up uploaded file
     fs.unlinkSync(req.file.path);
 
-    res.json({ result: text }); // Sends JSON response
+    res.json({ result: text });
   } catch (error) {
     console.error("Error:", error);
     // Clean up uploaded file if it exists
     if (req.file && fs.existsSync(req.file.path)) {
       fs.unlinkSync(req.file.path);
     }
-    res.status(500).json({ error: "Internal server error" }); // Error response
+    res.status(500).json({
+      error:
+        "I apologize, but I'm having trouble analyzing your image right now. Please try again with a clearer image.",
+    });
   }
 });
 
@@ -338,7 +390,17 @@ async function problemSolving() {
 async function textQuery(query) {
   try {
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-    const result = await model.generateContent(query);
+
+    const enhancedPrompt = `You are an AI educational assistant for Saarthi. Please provide a clear, structured response to: "${query}"
+
+Guidelines:
+- Use markdown formatting for structure
+- Include bullet points for key concepts
+- Use **bold** for important terms
+- Be educational and encouraging
+- Keep it concise but comprehensive`;
+
+    const result = await model.generateContent(enhancedPrompt);
     const response = await result.response;
     const text = response.text();
     return text;
@@ -351,8 +413,27 @@ async function textQuery(query) {
 async function syllabusGen(std, sub) {
   try {
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-    const prompt = `Generate the Syllabus of ${std} for the subject ${sub} based on current National Educational Policy and always keep in mind the class of a student.Only generate the syllabus according the class age.`;
-    const result = await model.generateContent(prompt);
+
+    const enhancedPrompt = `Generate a comprehensive syllabus for ${std} grade ${sub} subject based on current National Educational Policy (NEP 2020).
+
+Please structure the response with:
+- Clear section headings using markdown (## for main sections, ### for subsections)
+- Organized topics and subtopics
+- Learning objectives for each unit
+- Suggested activities and assessments
+- Duration for each unit
+- Key skills to be developed
+
+Guidelines:
+- Adapt content to the age and cognitive level of ${std} students
+- Include modern pedagogical approaches
+- Focus on skill development and practical application
+- Use bullet points for better readability
+- Make it engaging and student-friendly
+
+Please provide a well-structured syllabus:`;
+
+    const result = await model.generateContent(enhancedPrompt);
     const response = await result.response;
     const text = response.text();
     return text;
