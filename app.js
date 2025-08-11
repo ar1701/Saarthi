@@ -123,6 +123,10 @@ app.listen(port, () => {
 });
 
 // Routes
+app.get("/", (req, res) => {
+  res.redirect("/main");
+});
+
 app.get("/index", isLoggedIn, (req, res) => {
   res.render("index.ejs", { currentPage: "home" });
 });
@@ -201,6 +205,19 @@ app.get("/flashcard-generator", isLoggedIn, (req, res) => {
 
 app.get("/quiz-generator", isLoggedIn, (req, res) => {
   res.render("quiz-generator.ejs", { currentPage: "quiz-generator" });
+});
+
+// Policy Pages
+app.get("/privacy-policy", (req, res) => {
+  res.render("privacy-policy.ejs", { currentPage: "privacy-policy" });
+});
+
+app.get("/terms-of-service", (req, res) => {
+  res.render("terms-of-service.ejs", { currentPage: "terms-of-service" });
+});
+
+app.get("/cookie-policy", (req, res) => {
+  res.render("cookie-policy.ejs", { currentPage: "cookie-policy" });
 });
 
 app.post(
@@ -393,43 +410,56 @@ app.post("/quiz-generator", isLoggedIn, async (req, res) => {
     const { topic, difficulty, type, count } = req.body;
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-    const enhancedPrompt = `Generate a ${difficulty} level quiz on the topic: ${topic} with ${count} ${type} questions.
+    const enhancedPrompt = `Generate a ${difficulty} level quiz on the topic: "${topic}" with exactly ${count} ${type} questions.
 
-Please structure the response as a JSON object with the following format:
+IMPORTANT: You must respond with ONLY valid JSON in this exact format:
 {
   "questions": [
     {
       "questionNumber": 1,
-      "question": "Question text here",
-      "options": ["A. Option 1", "B. Option 2", "C. Option 3", "D. Option 4"],
-      "correctAnswer": "A",
-      "explanation": "Explanation of why this answer is correct"
+      "question": "What is the capital of France?",
+      "options": ["A. London", "B. Paris", "C. Berlin", "D. Madrid"],
+      "correctAnswer": "B",
+      "explanation": "Paris is the capital and largest city of France."
     }
   ]
 }
 
-Guidelines:
-- For MCQ: Provide exactly 4 options (A, B, C, D) with one correct answer
-- For Subjective: Provide the question and expected key points in explanation
-- Make questions engaging and educational
-- Ensure appropriate difficulty level
-- Include clear explanations for each answer
-- Make it suitable for students
+Requirements:
+- For MCQ questions: Always provide exactly 4 options labeled A, B, C, D
+- For Subjective questions: Use the options field for key points and explanation for detailed answer
+- Make questions appropriate for ${difficulty} difficulty level
+- Include clear, educational explanations
 - Ensure questions test understanding, not just memorization
+- Do not include any text before or after the JSON object
+- The response must be valid JSON that can be parsed directly
 
-Please provide the response in valid JSON format only:`;
+Generate exactly ${count} questions for the topic: ${topic}`;
 
     const result = await model.generateContent(enhancedPrompt);
     const response = await result.response;
     const text = response.text();
 
-    // Try to parse JSON, if it fails, return structured text
+    // Try to parse JSON, if it fails, try to extract JSON from the response
     try {
       const quizData = JSON.parse(text);
       res.json({ quiz: quizData, topic, difficulty, type, count });
     } catch (parseError) {
-      // If JSON parsing fails, return the text as is
-      res.json({ result: text, topic, difficulty, type, count });
+      // Try to extract JSON from the response if it contains extra text
+      try {
+        const jsonMatch = text.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+          const extractedJson = JSON.parse(jsonMatch[0]);
+          res.json({ quiz: extractedJson, topic, difficulty, type, count });
+        } else {
+          throw new Error("No JSON found in response");
+        }
+      } catch (extractError) {
+        res.status(500).json({
+          error:
+            "Failed to generate structured quiz. Please try again with a different topic.",
+        });
+      }
     }
   } catch (error) {
     console.error("Error:", error);
@@ -453,14 +483,14 @@ app.post("/submit-quiz", isLoggedIn, async (req, res) => {
       const userAnswer = answers[i].userAnswer;
       const correctAnswer = answers[i].correctAnswer;
       const isCorrect = userAnswer === correctAnswer;
-      
+
       if (isCorrect) correctAnswers++;
-      
+
       userAnswers.push({
         questionNumber: i + 1,
         userAnswer,
         correctAnswer,
-        isCorrect
+        isCorrect,
       });
     }
 
@@ -476,17 +506,17 @@ app.post("/submit-quiz", isLoggedIn, async (req, res) => {
       correctAnswers,
       score,
       userAnswers,
-      timeTaken: parseInt(timeTaken)
+      timeTaken: parseInt(timeTaken),
     });
 
     await quizResult.save();
 
-    res.json({ 
-      success: true, 
-      score, 
-      correctAnswers, 
+    res.json({
+      success: true,
+      score,
+      correctAnswers,
       totalQuestions: answers.length,
-      userAnswers 
+      userAnswers,
     });
   } catch (error) {
     console.error("Error:", error);
@@ -502,7 +532,7 @@ app.get("/quiz-history", isLoggedIn, async (req, res) => {
     const quizResults = await QuizResult.find({ user: req.user._id })
       .sort({ completedAt: -1 })
       .limit(10);
-    
+
     res.json({ quizResults });
   } catch (error) {
     console.error("Error:", error);
