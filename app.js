@@ -548,10 +548,17 @@ app.post("/ask", isLoggedIn, async (req, res) => {
     let result = await textQuery(question);
     res.json({ result: result });
   } catch (error) {
-    console.error("Error:", error);
+    console.error("Error in /ask:", error);
+    
+    // Check if it's a Gemini API overload error
+    if (error.status === 503 || error.message?.includes('overloaded')) {
+      return res.status(503).json({
+        error: "The AI service is currently experiencing high traffic. Please try again in a few minutes."
+      });
+    }
+    
     res.status(500).json({
-      error:
-        "I apologize, but I'm having trouble processing your request right now. Please try again in a moment.",
+      error: "I apologize, but I'm having trouble processing your request right now. Please try again in a moment."
     });
   }
 });
@@ -585,10 +592,17 @@ Please provide a well-structured educational response:`;
 
     res.json({ message: text });
   } catch (error) {
-    console.error("Error:", error);
+    console.error("Error in /chat:", error);
+    
+    // Check if it's a Gemini API overload error
+    if (error.status === 503 || error.message?.includes('overloaded')) {
+      return res.status(503).json({
+        message: "The AI service is currently experiencing high traffic. Please try again in a few minutes."
+      });
+    }
+    
     res.status(500).json({
-      message:
-        "I apologize, but I'm having trouble processing your request right now. Please try again in a moment.",
+      message: "I apologize, but I'm having trouble processing your request right now. Please try again in a moment."
     });
   }
 });
@@ -641,14 +655,21 @@ Please analyze the image and provide a structured educational response:`;
 
     res.json({ result: text });
   } catch (error) {
-    console.error("Error:", error);
+    console.error("Error in /form:", error);
     // Clean up uploaded file if it exists
     if (req.file && fs.existsSync(req.file.path)) {
       fs.unlinkSync(req.file.path);
     }
+    
+    // Check if it's a Gemini API overload error
+    if (error.status === 503 || error.message?.includes('overloaded')) {
+      return res.status(503).json({
+        error: "The AI service is currently experiencing high traffic. Please try again in a few minutes."
+      });
+    }
+    
     res.status(500).json({
-      error:
-        "I apologize, but I'm having trouble analyzing your image right now. Please try again with a clearer image.",
+      error: "I apologize, but I'm having trouble analyzing your image right now. Please try again with a clearer image."
     });
   }
 });
@@ -686,26 +707,49 @@ function fileToGenerativePart(path, mimeType) {
 }
 
 async function problemSolving() {
-  try {
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-    const prompt = "";
-    const imageParts = [fileToGenerativePart("prob.jpg", "image/jpeg")];
-    const result = await model.generateContent([prompt, ...imageParts]);
-    const response = await result.response;
-    const text = response.text();
-    console.log(text);
-    return text;
-  } catch (error) {
-    console.error("Error in problemSolving:", error);
-    throw error;
+  const maxRetries = 3;
+  let lastError;
+  
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      const prompt = "";
+      const imageParts = [fileToGenerativePart("prob.jpg", "image/jpeg")];
+      const result = await model.generateContent([prompt, ...imageParts]);
+      const response = await result.response;
+      const text = response.text();
+      console.log(text);
+      return text;
+    } catch (error) {
+      console.error(`Error in problemSolving (attempt ${attempt}):`, error);
+      lastError = error;
+      
+      // If it's an overload error, wait before retrying
+      if (error.status === 503 || error.message?.includes('overloaded')) {
+        if (attempt < maxRetries) {
+          console.log(`Gemini API overloaded, retrying in ${attempt * 2} seconds...`);
+          await new Promise(resolve => setTimeout(resolve, attempt * 2000));
+          continue;
+        }
+      }
+      
+      // For other errors or after max retries, throw the error
+      throw error;
+    }
   }
+  
+  throw lastError;
 }
 
 async function textQuery(query) {
-  try {
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+  const maxRetries = 3;
+  let lastError;
+  
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-    const enhancedPrompt = `You are an AI educational assistant for Saarthi. Please provide a clear, structured response to: "${query}"
+      const enhancedPrompt = `You are an AI educational assistant for Saarthi. Please provide a clear, structured response to: "${query}"
 
 Guidelines:
 - Use markdown formatting for structure
@@ -714,21 +758,40 @@ Guidelines:
 - Be educational and encouraging
 - Keep it concise but comprehensive`;
 
-    const result = await model.generateContent(enhancedPrompt);
-    const response = await result.response;
-    const text = response.text();
-    return text;
-  } catch (error) {
-    console.error("Error in textQuery:", error);
-    throw error;
+      const result = await model.generateContent(enhancedPrompt);
+      const response = await result.response;
+      const text = response.text();
+      return text;
+    } catch (error) {
+      console.error(`Error in textQuery (attempt ${attempt}):`, error);
+      lastError = error;
+      
+      // If it's an overload error, wait before retrying
+      if (error.status === 503 || error.message?.includes('overloaded')) {
+        if (attempt < maxRetries) {
+          console.log(`Gemini API overloaded, retrying in ${attempt * 2} seconds...`);
+          await new Promise(resolve => setTimeout(resolve, attempt * 2000));
+          continue;
+        }
+      }
+      
+      // For other errors or after max retries, throw the error
+      throw error;
+    }
   }
+  
+  throw lastError;
 }
 
 async function syllabusGen(std, sub) {
-  try {
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+  const maxRetries = 3;
+  let lastError;
+  
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-    const enhancedPrompt = `Generate a comprehensive syllabus for ${std} grade ${sub} subject based on current National Educational Policy (NEP 2020).
+      const enhancedPrompt = `Generate a comprehensive syllabus for ${std} grade ${sub} subject based on current National Educational Policy (NEP 2020).
 
 Please structure the response with:
 - Clear section headings using markdown (## for main sections, ### for subsections)
@@ -747,12 +810,27 @@ Guidelines:
 
 Please provide a well-structured syllabus:`;
 
-    const result = await model.generateContent(enhancedPrompt);
-    const response = await result.response;
-    const text = response.text();
-    return text;
-  } catch (error) {
-    console.error("Error in syllabusGen:", error);
-    throw error;
+      const result = await model.generateContent(enhancedPrompt);
+      const response = await result.response;
+      const text = response.text();
+      return text;
+    } catch (error) {
+      console.error(`Error in syllabusGen (attempt ${attempt}):`, error);
+      lastError = error;
+      
+      // If it's an overload error, wait before retrying
+      if (error.status === 503 || error.message?.includes('overloaded')) {
+        if (attempt < maxRetries) {
+          console.log(`Gemini API overloaded, retrying in ${attempt * 2} seconds...`);
+          await new Promise(resolve => setTimeout(resolve, attempt * 2000));
+          continue;
+        }
+      }
+      
+      // For other errors or after max retries, throw the error
+      throw error;
+    }
   }
+  
+  throw lastError;
 }
