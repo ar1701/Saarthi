@@ -9,21 +9,23 @@ const app = express();
 const mongoose = require("mongoose");
 const path = require("path");
 const axios = require("axios");
+const fs = require("fs");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const User = require("./model/user.js");
 const Profile = require("./model/profile.js");
 
 const session = require("express-session");
-const bodyParser = require("body-parser");
 const MongoStore = require("connect-mongo");
 const LocalStrategy = require("passport-local");
 const passport = require("passport");
 const flash = require("connect-flash");
 const { isLoggedIn } = require("./middleware.js");
 const multer = require("multer");
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 const dbUrl = process.env.ATLASDB_URL;
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 // const { storage } = require("./cloudConfig.js");
 
 async function extractImage(url) {
@@ -78,15 +80,16 @@ const sessionOptions = {
 app.use(session(sessionOptions));
 app.use(flash());
 
-app.use(bodyParser.urlencoded({ extended: true }));
+// Body parsing middleware - use only one set
+app.use(express.urlencoded({ extended: true, limit: "10mb" }));
+app.use(express.json({ limit: "10mb" }));
+
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "/views"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use("public/images/", express.static("./public/images"));
-app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.engine("ejs", ejsMate);
-app.use(express.json());
 
 async function main() {
   await mongoose.connect(dbUrl);
@@ -183,7 +186,7 @@ app.post(
     let { username } = req.body;
     req.session.user = { username };
     req.flash("success", "Welcome to Saarthi!");
-    res.redirect("/user/home");
+    res.redirect("/index");
   }
 );
 
@@ -236,7 +239,7 @@ app.post("/ask", isLoggedIn, async (req, res) => {
 app.post("/chat", isLoggedIn, async (req, res) => {
   try {
     const userInput = req.body.message;
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     const result = await model.generateContent(userInput);
     const response = await result.response;
     const text = response.text();
@@ -250,6 +253,11 @@ app.post("/chat", isLoggedIn, async (req, res) => {
 
 app.post("/form", isLoggedIn, upload.single("image"), async (req, res) => {
   try {
+    // Check if file was uploaded
+    if (!req.file) {
+      return res.status(400).json({ error: "No image file uploaded" });
+    }
+
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     const prompt = "";
     const imageParts = [
@@ -265,9 +273,16 @@ app.post("/form", isLoggedIn, upload.single("image"), async (req, res) => {
     const response = await result.response;
     const text = response.text();
 
+    // Clean up uploaded file
+    fs.unlinkSync(req.file.path);
+
     res.json({ result: text }); // Sends JSON response
   } catch (error) {
     console.error("Error:", error);
+    // Clean up uploaded file if it exists
+    if (req.file && fs.existsSync(req.file.path)) {
+      fs.unlinkSync(req.file.path);
+    }
     res.status(500).json({ error: "Internal server error" }); // Error response
   }
 });
@@ -287,47 +302,62 @@ app.all("*", (req, res) => {
   res.redirect("/index");
 });
 
-const { GoogleGenerativeAI } = require("@google/generative-ai");
-const fs = require("fs");
-
-const dotenv = require("dotenv");
-dotenv.config();
-
-const genAI = new GoogleGenerativeAI(process.env.API_KEY);
-
 function fileToGenerativePart(path, mimeType) {
-  return {
-    inlineData: {
-      data: Buffer.from(fs.readFileSync(path)).toString("base64"),
-      mimeType,
-    },
-  };
+  try {
+    if (!fs.existsSync(path)) {
+      throw new Error(`File not found: ${path}`);
+    }
+    return {
+      inlineData: {
+        data: Buffer.from(fs.readFileSync(path)).toString("base64"),
+        mimeType,
+      },
+    };
+  } catch (error) {
+    console.error(`Error reading file ${path}:`, error);
+    throw error;
+  }
 }
 
 async function problemSolving() {
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-  const prompt = "";
-  const imageParts = [fileToGenerativePart("prob.jpg", "image/jpeg")];
-  const result = await model.generateContent([prompt, ...imageParts]);
-  const response = await result.response;
-  const text = response.text();
-  console.log(text);
-  return text;
+  try {
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const prompt = "";
+    const imageParts = [fileToGenerativePart("prob.jpg", "image/jpeg")];
+    const result = await model.generateContent([prompt, ...imageParts]);
+    const response = await result.response;
+    const text = response.text();
+    console.log(text);
+    return text;
+  } catch (error) {
+    console.error("Error in problemSolving:", error);
+    throw error;
+  }
 }
 
 async function textQuery(query) {
-  const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-  const result = await model.generateContent(query);
-  const response = await result.response;
-  const text = response.text();
-  return text;
+  try {
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const result = await model.generateContent(query);
+    const response = await result.response;
+    const text = response.text();
+    return text;
+  } catch (error) {
+    console.error("Error in textQuery:", error);
+    throw error;
+  }
 }
 
 async function syllabusGen(std, sub) {
-  const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-  const prompt = `Generate the Syllabus of ${std} for the subject ${sub} based on current National Educational Policy and always keep in mind the class of a student.Only generate the syllabus according the class age.`;
-  const result = await model.generateContent(prompt);
-  const response = await result.response;
-  const text = response.text();
-  return text;
+  try {
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const prompt = `Generate the Syllabus of ${std} for the subject ${sub} based on current National Educational Policy and always keep in mind the class of a student.Only generate the syllabus according the class age.`;
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const text = response.text();
+    return text;
+  } catch (error) {
+    console.error("Error in syllabusGen:", error);
+    throw error;
+  }
 }

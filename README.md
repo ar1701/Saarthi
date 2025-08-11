@@ -61,6 +61,31 @@ No more room for errors, just efficient attendance management.
 - _Deployment: Render_
 - _Google Tools: Vertex AI, Gemini(API)_
 
+## _Environment Setup -_
+
+To run this project locally, you need to set up the following environment variables in a `.env` file:
+
+```
+# Google Generative AI API Key
+GEMINI_API_KEY=your_gemini_api_key_here
+
+# MongoDB Atlas Connection String
+ATLASDB_URL=your_mongodb_atlas_connection_string_here
+
+# Session Secret
+SECRET=your_session_secret_here
+
+# Cloudinary Configuration (if using cloud storage)
+CLOUD_NAME=your_cloudinary_cloud_name
+CLOUD_API_KEY=your_cloudinary_api_key
+CLOUD_SECRET_KEY=your_cloudinary_secret_key
+
+# Node Environment
+NODE_ENV=development
+```
+
+**Note:** Make sure to replace the placeholder values with your actual API keys and configuration details.
+
 ## _Buisness Model_ -
 
 - Sponsorships and Partnerships: Collaborate with government agencies, NGOs, corporate sponsors, and educational institutions to sponsor youth programs, workshops, and community projects on the platform.
