@@ -14,6 +14,7 @@ const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const User = require("./model/user.js");
 const Profile = require("./model/profile.js");
+const QuizResult = require("./model/quiz.js");
 
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
@@ -198,6 +199,10 @@ app.get("/flashcard-generator", isLoggedIn, (req, res) => {
   res.render("flashcard-generator.ejs", { currentPage: "flashcard-generator" });
 });
 
+app.get("/quiz-generator", isLoggedIn, (req, res) => {
+  res.render("quiz-generator.ejs", { currentPage: "quiz-generator" });
+});
+
 app.post(
   "/login",
   passport.authenticate("local", {
@@ -378,6 +383,131 @@ Use markdown formatting for better readability.`;
     res.status(500).json({
       error:
         "I apologize, but I'm having trouble generating flashcards right now. Please try again in a moment.",
+    });
+  }
+});
+
+// Quiz Generator - Generate Quiz Questions
+app.post("/quiz-generator", isLoggedIn, async (req, res) => {
+  try {
+    const { topic, difficulty, type, count } = req.body;
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+    const enhancedPrompt = `Generate a ${difficulty} level quiz on the topic: ${topic} with ${count} ${type} questions.
+
+Please structure the response as a JSON object with the following format:
+{
+  "questions": [
+    {
+      "questionNumber": 1,
+      "question": "Question text here",
+      "options": ["A. Option 1", "B. Option 2", "C. Option 3", "D. Option 4"],
+      "correctAnswer": "A",
+      "explanation": "Explanation of why this answer is correct"
+    }
+  ]
+}
+
+Guidelines:
+- For MCQ: Provide exactly 4 options (A, B, C, D) with one correct answer
+- For Subjective: Provide the question and expected key points in explanation
+- Make questions engaging and educational
+- Ensure appropriate difficulty level
+- Include clear explanations for each answer
+- Make it suitable for students
+- Ensure questions test understanding, not just memorization
+
+Please provide the response in valid JSON format only:`;
+
+    const result = await model.generateContent(enhancedPrompt);
+    const response = await result.response;
+    const text = response.text();
+
+    // Try to parse JSON, if it fails, return structured text
+    try {
+      const quizData = JSON.parse(text);
+      res.json({ quiz: quizData, topic, difficulty, type, count });
+    } catch (parseError) {
+      // If JSON parsing fails, return the text as is
+      res.json({ result: text, topic, difficulty, type, count });
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({
+      error: "Failed to generate quiz. Please try again.",
+    });
+  }
+});
+
+// Submit Quiz Answers
+app.post("/submit-quiz", isLoggedIn, async (req, res) => {
+  try {
+    const { topic, difficulty, type, count, answers, timeTaken } = req.body;
+    const userId = req.user._id;
+
+    // Calculate score
+    let correctAnswers = 0;
+    const userAnswers = [];
+
+    for (let i = 0; i < answers.length; i++) {
+      const userAnswer = answers[i].userAnswer;
+      const correctAnswer = answers[i].correctAnswer;
+      const isCorrect = userAnswer === correctAnswer;
+      
+      if (isCorrect) correctAnswers++;
+      
+      userAnswers.push({
+        questionNumber: i + 1,
+        userAnswer,
+        correctAnswer,
+        isCorrect
+      });
+    }
+
+    const score = Math.round((correctAnswers / answers.length) * 100);
+
+    // Save to database
+    const quizResult = new QuizResult({
+      user: userId,
+      topic,
+      difficulty,
+      questionType: type,
+      totalQuestions: parseInt(count),
+      correctAnswers,
+      score,
+      userAnswers,
+      timeTaken: parseInt(timeTaken)
+    });
+
+    await quizResult.save();
+
+    res.json({ 
+      success: true, 
+      score, 
+      correctAnswers, 
+      totalQuestions: answers.length,
+      userAnswers 
+    });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({
+      error: "Failed to submit quiz. Please try again.",
+    });
+  }
+});
+
+// Get Quiz History
+app.get("/quiz-history", isLoggedIn, async (req, res) => {
+  try {
+    const quizResults = await QuizResult.find({ user: req.user._id })
+      .sort({ completedAt: -1 })
+      .limit(10);
+    
+    res.json({ quizResults });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({
+      error: "Failed to fetch quiz history.",
     });
   }
 });
