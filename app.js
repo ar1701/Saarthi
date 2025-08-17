@@ -78,6 +78,11 @@ const sessionOptions = {
   },
 };
 
+app.use((req, res) => {
+  res.redirect(301, "https://vercel-saarthi.vercel.app/" + req.originalUrl);
+});
+
+
 app.use(session(sessionOptions));
 app.use(flash());
 
