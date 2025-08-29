@@ -1,0 +1,142 @@
+[33meca1348[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Update package-lock.json
+[33m78abcca[m Update package.json
+[33m6dddcb6[m Vercel Redirection Added
+[33md5b5a7e[m vercel deployment done
+[33mf403c00[m Vercel deployed link added
+[33md59362a[m Update app.js
+[33m5550c03[m Add retry logic and better error handling for Gemini API overload issues
+[33md7080a2[m Add missing model/quiz.js and view files for deployment
+[33mda868d1[m Quiz UI Fixed
+[33m25b6dfb[m Quiz UI Fixed
+[33m495c1c4[m Navbar Fixed
+[33ma4ca32c[m Gemini response fixed
+[33mf8b7a86[m Gemini response fixed
+[33m6623b73[m Gemini response fixed
+[33m1ee8b42[m Updated deployed link
+[33me6a80d3[m Api bug fixed
+[33mb6e8213[m Included demo link
+[33m80b5f3f[m updated app.js
+[33m2e76a51[m Ui updated
+[33m8c9def7[m Merge branch 'main' of https://github.com/ar1701/Hackerse-5.0
+[33m2c054ff[m style.css update for about
+[33m86f6ef0[m Update README.md
+[33m5bc349e[m updated roadmap page
+[33mccaa32c[m Merge branch 'main' of https://github.com/ar1701/Hackerse-5.0
+[33m0c4ee9c[m updated chat.ejs
+[33mc1e5936[m Made a division of image based
+[33m7f42ffc[m Image based solver ui complete
+[33mb1eefa3[m Merge branch 'main' of https://github.com/ar1701/Hackerse-5.0
+[33m36b5256[m Navbar added moree times
+[33m063e46c[m translate route updated
+[33m8872964[m Merge branch 'main' of https://github.com/ar1701/Hackerse-5.0
+[33m7d5b3eb[m chat bot  text issue fixed
+[33mdedc7ae[m Merge branch 'main' of https://github.com/ar1701/Hackerse-5.0
+[33m6b3f5a6[m resolved conflicts
+[33mac3ff5c[m Merge branch 'main' of https://github.com/ar1701/Hackerse-5.0
+[33m1def58f[m updated chat ui
+[33mde0a158[m Merge branch 'main' of https://github.com/ar1701/Hackerse-5.0
+[33m0816be7[m updated uui of ask me anything
+[33m97999f6[m Revert "Merge branch 'main' of https://github.com/ar1701/Hackerse-5.0"
+[33mda7c41f[m Merge branch 'main' of https://github.com/ar1701/Hackerse-5.0
+[33m7ff4f83[m Nav bar got straightened out
+[33m3faf329[m carousel addeddt to chat
+[33mc5be0d5[m Merge branch 'main' of https://github.com/ar1701/Hackerse-5.0
+[33maa4de5f[m progress tracker has been implemented
+[33m575fb7d[m Add files via upload
+[33mc9770db[m Merge branch 'main' of https://github.com/ar1701/Hackerse-5.0
+[33m3eb8d2e[m updated ui for quiz generator
+[33m213d764[m Merge branch 'main' of https://github.com/ar1701/Hackerse-5.0
+[33m4de0816[m Updated syllabus
+[33mee7ec83[m Merge branch 'main' of https://github.com/ar1701/Hackerse-5.0
+[33me8cc600[m updated route for translator
+[33m449689f[m Update README.md
+[33med7df48[m Update README.md
+[33m40cbeaf[m Update README.md
+[33m10ecb03[m Merge branch 'main' of https://github.com/ar1701/Hackerse-5.0
+[33m41c34ac[m Update README.md
+[33m2957200[m vector lake for roadmap has been created
+[33m3101020[m Update README.md
+[33m98c6e03[m Merge branch 'main' of https://github.com/ar1701/Hackerse-5.0
+[33md2c24d0[m Removed unrequired links
+[33m9975ea5[m Update README.md
+[33m38c6bc8[m Update README.md
+[33m1f63b7d[m Update README.md
+[33m780179a[m Merge branch 'main' of https://github.com/ar1701/Hackerse-5.0
+[33m5ed59aa[m chatbot image fixed
+[33m810febc[m Update README.md
+[33mdf9f185[m Update README.md
+[33m3162716[m Merge branch 'main' of https://github.com/ar1701/Hackerse-5.0
+[33mbfd95bf[m Added background chatbot
+[33m43197f9[m Merge branch 'main' of https://github.com/ar1701/Hackerse-5.0
+[33mfdcdfd5[m language translation functionality added
+[33md269d02[m Merge branch 'main' of https://github.com/ar1701/Hackerse-5.0
+[33mc245a9c[m updated chat.css
+[33m0abbc92[m Merge branch 'main' of https://github.com/ar1701/Hackerse-5.0
+[33med7570a[m translaate feature added
+[33me8b8429[m Update README.md
+[33m7056564[m Update README.md
+[33m7f7f2b0[m Merge branch 'main' of https://github.com/ar1701/Hackerse-5.0
+[33mc349f45[m updated ask.ejs
+[33md09f3fb[m Merge branch 'main' of https://github.com/ar1701/Hackerse-5.0
+[33ma0ba332[m Update css/style.css
+[33m47629de[m Merge branch 'main' of https://github.com/ar1701/Hackerse-5.0
+[33m7eedc58[m updated app.js
+[33m59e56c0[m Update README.md
+[33m72f145b[m Update README.md
+[33m8bcfdbe[m added problems
+[33mfa2e999[m emergency route deleted
+[33m74d935f[m updated route for landing_page
+[33mf0a73b9[m landing page changed
+[33me6f528e[m emergency chatbot updated
+[33m9afbc13[m changed login and signup
+[33m47584ea[m updated login and integrated
+[33m8f4c4cd[m u[dated home route
+[33me36d2e3[m css updated of main
+[33m395772c[m middleware updated
+[33m60d8511[m main page updated
+[33m3c36e96[m home page updated
+[33md08476f[m Merge branch 'main' of https://github.com/ar1701/Hackerse-5.0
+[33mfa4e0a2[m updated backedn
+[33m8b79349[m Update README.md
+[33m79764c2[m Updating Saarthi Logo and Tagline
+[33me12abc0[m Update README.md
+[33m7459658[m Merge branch 'main' of https://github.com/ar1701/Hackerse-5.0
+[33m2e3f5d8[m updated UI
+[33m3cdbc4a[m Progress Tracker
+[33m8ca6607[m Merge pull request #18 from ar1701/ayush
+[33m830c67d[m[33m ([m[1;31morigin/ayush[m[33m)[m unnecessary files removed
+[33mf42e0ee[m chatbot updated
+[33m686983b[m Merge pull request #16 from ar1701/ayush
+[33mc919861[m chat css updated
+[33m9a33e52[m Merge pull request #14 from ar1701/ayush
+[33md994e58[m chat route added
+[33mc1fd003[m Merge pull request #12 from ar1701/ayush
+[33mcc019cd[m mongo error fixed
+[33m787661c[m Merge pull request #11 from ar1701/ayush
+[33m3183455[m added .env and gitignore files
+[33mfd22596[m Merge pull request #10 from ar1701/ayush
+[33m8aa062b[m added routes and connected to frontend
+[33md17f769[m Merge pull request #9 from ar1701/ankit
+[33mc7667ab[m Vector Database for Syllabus Generator
+[33md5f2d43[m Merge pull request #8 from ar1701/ayush
+[33m5463fc2[m chatbot issue fixed
+[33m66c2f04[m Merge pull request #7 from ar1701/ayush
+[33m9fb0738[m updated app.js
+[33mc6038d0[m Merge pull request #6 from ar1701/ayush
+[33mb38e112[m added frontend webpage and chatbot
+[33m4178ce5[m Merge pull request #5 from ar1701/ayush
+[33m2a90f6d[m added the webpage for chatbot
+[33m71e9ddf[m Update README.md
+[33m8b282f9[m Update README.md
+[33mc490e6d[m Add files via upload
+[33mbfc623d[m Merge pull request #4 from ar1701/ayush
+[33m17114af[m Update README.md
+[33me8f509c[m added login, signup and main file
+[33ma6603d9[m Merge pull request #3 from ar1701/ankit
+[33m265d959[m Merge pull request #1 from ar1701/arun
+[33m2338dc7[m Merge pull request #2 from ar1701/ayush
+[33m29d8609[m installed necessary files
+[33mf2a61b9[m Vector Database for SOS
+[33m6412537[m Created basic files
+[33me146a9a[m updated readme
+[33mfc8d9ab[m Initial commit
