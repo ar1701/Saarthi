@@ -78,9 +78,9 @@ const sessionOptions = {
   },
 };
 
-app.use((req, res) => {
-  res.redirect(301, "https://vercel-saarthi.vercel.app/" + req.originalUrl);
-});
+// app.use((req, res) => {
+//   res.redirect(301, "https://vercel-saarthi.vercel.app/" + req.originalUrl);
+// });
 
 
 app.use(session(sessionOptions));
@@ -281,7 +281,7 @@ app.post("/syllabus", isLoggedIn, async (req, res) => {
 app.post("/essay-writer", isLoggedIn, async (req, res) => {
   try {
     const { topic, type, length } = req.body;
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
     const prompt = `Write a ${type} essay on "${topic}" with approximately ${length} words.
 
@@ -311,7 +311,7 @@ Please write a well-structured essay:`;
 app.post("/code-explainer", isLoggedIn, async (req, res) => {
   try {
     const { code, language } = req.body;
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
     const prompt = `Explain this ${language} code in detail:
 
@@ -344,7 +344,7 @@ Use markdown formatting for better readability.`;
 app.post("/study-planner", isLoggedIn, async (req, res) => {
   try {
     const { subjects, hours, days, goals } = req.body;
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
     const prompt = `Create a personalized study plan for a student with the following requirements:
 
@@ -379,7 +379,7 @@ Use markdown formatting and make it practical and achievable.`;
 app.post("/flashcard-generator", isLoggedIn, async (req, res) => {
   try {
     const { topic, subject, count } = req.body;
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
     const prompt = `Generate ${count} flashcards for ${subject} on the topic: "${topic}"
 
@@ -413,7 +413,7 @@ Use markdown formatting for better readability.`;
 app.post("/quiz-generator", isLoggedIn, async (req, res) => {
   try {
     const { topic, difficulty, type, count } = req.body;
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
     const enhancedPrompt = `Generate a ${difficulty} level quiz on the topic: "${topic}" with exactly ${count} ${type} questions.
 
@@ -573,7 +573,7 @@ app.post("/ask", isLoggedIn, async (req, res) => {
 app.post("/chat", isLoggedIn, async (req, res) => {
   try {
     const userInput = req.body.message;
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
     // Enhanced prompt for better structured responses
     const enhancedPrompt = `You are an AI educational assistant for Saarthi, an innovative learning platform. 
@@ -623,7 +623,7 @@ app.post("/form", isLoggedIn, upload.single("image"), async (req, res) => {
       return res.status(400).json({ error: "No image file uploaded" });
     }
 
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
     // Enhanced prompt for image analysis
     const enhancedPrompt = `You are an AI educational assistant analyzing an image that contains a problem or question. 
@@ -723,7 +723,7 @@ async function problemSolving() {
 
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
       const prompt = "";
       const imageParts = [fileToGenerativePart("prob.jpg", "image/jpeg")];
       const result = await model.generateContent([prompt, ...imageParts]);
@@ -760,7 +760,7 @@ async function textQuery(query) {
 
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
       const enhancedPrompt = `You are an AI educational assistant for Saarthi. Please provide a clear, structured response to: "${query}"
 
@@ -804,7 +804,7 @@ async function syllabusGen(std, sub) {
 
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
       const enhancedPrompt = `Generate a comprehensive syllabus for ${std} grade ${sub} subject based on current National Educational Policy (NEP 2020).
 
