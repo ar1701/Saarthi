@@ -56,10 +56,8 @@ const upload = multer({ storage });
 
 const store = MongoStore.create({
   mongoUrl: dbUrl,
-  crypto: {
-    secret: process.env.SECRET,
-  },
   touchAfter: 24 * 60 * 60,
+  collectionName: "sessions",
 });
 
 store.on("error", (error) => {
@@ -70,18 +68,20 @@ const sessionOptions = {
   store,
   secret: process.env.SECRET,
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
   cookie: {
     expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
     maxAge: 7 * 24 * 60 * 60 * 1000,
     httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
   },
 };
 
-// app.use((req, res) => {
-//   res.redirect(301, "https://vercel-saarthi.vercel.app/" + req.originalUrl);
-// });
-
+// Trust proxy for Vercel
+if (process.env.NODE_ENV === "production") {
+  app.set("trust proxy", 1);
+}
 
 app.use(session(sessionOptions));
 app.use(flash());
@@ -99,6 +99,14 @@ app.engine("ejs", ejsMate);
 
 async function main() {
   await mongoose.connect(dbUrl);
+  
+  // Clear old corrupted sessions on startup (remove this after first deploy)
+  try {
+    await mongoose.connection.collection("sessions").deleteMany({});
+    console.log("Cleared old sessions");
+  } catch (err) {
+    console.log("No sessions to clear or collection doesn't exist");
+  }
 }
 
 main()
