@@ -123,9 +123,13 @@ app.use((req, res, next) => {
 });
 
 let port = process.env.PORT || 3000;
-app.listen(port, () => {
-  console.log("listening to the port " + port);
-});
+
+// Only listen when running locally, not on Vercel
+if (process.env.NODE_ENV !== "production") {
+  app.listen(port, () => {
+    console.log("listening to the port " + port);
+  });
+}
 
 // Routes
 app.get("/", (req, res) => {
@@ -851,3 +855,6 @@ Please provide a well-structured syllabus:`;
 
   throw lastError;
 }
+
+// Export the app for Vercel
+module.exports = app;
